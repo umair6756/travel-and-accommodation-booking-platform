@@ -7,13 +7,30 @@ services:
       context: .
       dockerfile: TravelAccommodationBookingPlatform.App/Dockerfile
     ports:
-      - "8081:8080"   # Host 8081 → Container 8080
-      - "8082:8080"   # Host 8082 → Container 8080 (optional, agar ek aur port se access karna chaho)
+      - "8081:8080"
     depends_on:
       sqlserver:
         condition: service_started
     environment:
+      # Database
       - ConnectionStrings__AppDbContextConnection=Server=sqlserver;Database=master;User Id=sa;Password=cFj23uNY0lT&WP@t;TrustServerCertificate=True;
+
+      # JWT Config
+      - Jwt__Key=SuperSecretKey12345
+      - Jwt__Issuer=TravelApp
+      - Jwt__Audience=TravelUsers
+
+      # Cloudinary
+      - CloudinarySettings__CloudName=your_cloud_name
+      - CloudinarySettings__ApiKey=your_api_key
+      - CloudinarySettings__ApiSecret=your_api_secret
+
+      # SMTP (Email)
+      - SmtpSettings__Host=smtp.gmail.com
+      - SmtpSettings__Port=587
+      - SmtpSettings__Username=your_email@gmail.com
+      - SmtpSettings__Password=your_email_password_or_app_password
+      - SmtpSettings__From=your_email@gmail.com
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
